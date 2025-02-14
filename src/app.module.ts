@@ -4,24 +4,26 @@ import { TelegrafModule } from 'nestjs-telegraf';
 import { BotModule } from './bot/bot.module';
 import { BOT_NAME } from './bot/app.constant';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { join } from 'path';
 import { ClientModule } from './client/client.module';
+import { UserModule } from './user/user.module';
+import dbConfig from './config/db.config';
+import dbConfigProduction from './config/db.config.production';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ envFilePath: '.env' }),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: process.env.PG_HOST,
-      port: +process.env.PG_PORT,
-      username: process.env.PG_USER,
-      password: process.env.PG_PASS,
-      database: process.env.PG_DB,
-      synchronize: true,
-      entities: [join(__dirname, '**/*.entity.{ts,js}')],
-      logging: true,
-      autoLoadEntities: true,
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '.env',
+      expandVariables: true,
+      load: [dbConfig, dbConfigProduction],
     }),
+    TypeOrmModule.forRootAsync({
+      useFactory:
+        process.env.NODE_ENV === 'production' ? dbConfigProduction : dbConfig,
+    }),
+    UserModule,
+    AuthModule,
     TelegrafModule.forRootAsync({
       botName: BOT_NAME,
       useFactory: () => ({
