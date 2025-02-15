@@ -51,7 +51,7 @@ export class AuthController {
   async googleCallback(@Req() req, @Res() res) {
     const response = await this.authService.login(req.user.id);
     res.redirect(
-      `http://http://90.156.169.122:5173/login?token=${response.accessToken}`,
+      `http://90.156.169.122:5173/login?token=${response.accessToken}`,
     );
   }
 }

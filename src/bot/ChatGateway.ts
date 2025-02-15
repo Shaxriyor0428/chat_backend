@@ -13,7 +13,7 @@ import { ClientService } from '../client/client.service';
 import { Public } from '../common/decorators/public.decorator';
 
 @Public()
-@WebSocketGateway(3004, {
+@WebSocketGateway( {
   cors: { origin: '*' },
 })
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
