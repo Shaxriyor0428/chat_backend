@@ -13,15 +13,7 @@ import { ClientService } from '../client/client.service';
 import { Public } from '../common/decorators/public.decorator';
 
 @Public()
-@WebSocketGateway({
-  cors: {
-    origin: 'https://shaxriyorbek.uz',
-    methods: ['GET', 'POST'],
-    credentials: true,
-  },
-  transports: ['websocket', 'polling'],
-  namespace: '/socket.io',
-})
+@WebSocketGateway({ transports: ['websocket'], cors: { origin: '*' } })
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(
     @InjectBot(BOT_NAME) private readonly bot: Telegraf,
