@@ -10,7 +10,9 @@ import { InjectBot } from 'nestjs-telegraf';
 import { Telegraf } from 'telegraf';
 import { BOT_NAME } from './app.constant';
 import { ClientService } from '../client/client.service';
+import { Public } from '../common/decorators/public.decorator';
 
+@Public()
 @WebSocketGateway(3004, {
   cors: { origin: '*' },
 })

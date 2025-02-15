@@ -1,6 +1,5 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { Observable } from 'rxjs';
 import { ROLES_KEY } from 'src/common/decorators/roles.decorator';
 import { Role } from '../../enums/role.enum';
 
@@ -8,6 +7,11 @@ import { Role } from '../../enums/role.enum';
 export class RolesGuard implements CanActivate {
   constructor(private reflector: Reflector) {}
   canActivate(context: ExecutionContext): boolean {
+    if (context.getType() === 'ws') {
+      console.log('WebSocket uchun Auth tekshirilmaydi.');
+      return true;
+    }
+
     const requiredRoles = this.reflector.getAllAndOverride<Role[]>(ROLES_KEY, [
       context.getHandler(),
       context.getClass(),
