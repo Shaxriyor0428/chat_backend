@@ -13,8 +13,14 @@ import { ClientService } from '../client/client.service';
 import { Public } from '../common/decorators/public.decorator';
 
 @Public()
-@WebSocketGateway( {
-  cors: { origin: '*' },
+@WebSocketGateway({
+  cors: {
+    origin: 'https://shaxriyorbek.uz',
+    methods: ['GET', 'POST'],
+    credentials: true,
+  },
+  transports: ['websocket', 'polling'],
+  namespace: '/socket.io',
 })
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(
