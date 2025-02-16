@@ -16,6 +16,7 @@ import { RefreshAuthGuard } from '../common/guards/refresh-auth/refresh-auth.gua
 import { JwtAuthGuard } from '../common/guards/jwt-auth/jwt-auth.guard';
 import { GoogleAuthGuard } from '../common/guards/google-auth/google-auth.guard';
 import { FacebookAuthGuard } from '../common/guards/facebook-auth/facebook.auth.guard';
+import { GithubAuthGuard } from '../common/guards/github/github.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -66,8 +67,19 @@ export class AuthController {
   @Get('facebook/callback')
   async facebookCallback(@Req() req, @Res() res) {
     const response = await this.authService.login(req.user.id);
-    res.redirect(
-      `https://internet-magazin-mu.vercel.app/login?token=${response.accessToken}`,
-    );
+    res.redirect(`http://localhost:5173/login?token=${response.accessToken}`);
+  }
+
+  @Public()
+  @UseGuards(GithubAuthGuard)
+  @Get('github/login')
+  githubLogin() {}
+
+  @Public()
+  @UseGuards(GithubAuthGuard)
+  @Get('github/callback')
+  async githubCallback(@Req() req, @Res() res) {
+    const response = await this.authService.login(req.user.id);
+    res.redirect(`http://localhost:5173?token=${response.accessToken}`);
   }
 }

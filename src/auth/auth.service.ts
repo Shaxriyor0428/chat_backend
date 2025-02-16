@@ -18,7 +18,7 @@ export class AuthService {
     private refreshTokenConfig: ConfigType<typeof refreshJwtConfig>,
   ) {}
 
-  async validateUser(email: string, password: string) {
+  async isValidateUser(email: string, password: string) {
     const user = await this.userService.findByEmail(email);
     if (!user) throw new UnauthorizedException('User not found!');
     const isPasswordMatch = await compare(password, user.password);
@@ -92,15 +92,9 @@ export class AuthService {
     return currentUser;
   }
 
-  async validateGoogleUser(googleUser: CreateUserDto) {
-    const user = await this.userService.findByEmail(googleUser.email);
+  async validateUser(createUser: CreateUserDto) {
+    const user = await this.userService.findByEmail(createUser.email);
     if (user) return user;
-    return await this.userService.create(googleUser);
-  }
-
-  async validateFacebookUser(faceBookUser: CreateUserDto) {
-    const user = await this.userService.findByEmail(faceBookUser.email);
-    if (user) return user;
-    return await this.userService.create(faceBookUser);
+    return await this.userService.create(createUser);
   }
 }

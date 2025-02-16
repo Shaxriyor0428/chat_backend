@@ -18,6 +18,8 @@ import { JwtAuthGuard } from '../common/guards/jwt-auth/jwt-auth.guard';
 import { RolesGuard } from '../common/guards/roles/roles.guard';
 import { FacebookStrategyService } from '../common/strategies/facebook.strategy';
 import facebookOathConfig from '../common/config/facebook.oath.config';
+import githubOathConfig from '../common/config/github.oath.config';
+import { GithubStrategy } from '../common/strategies/github.strategy';
 
 @Module({
   imports: [
@@ -27,6 +29,7 @@ import facebookOathConfig from '../common/config/facebook.oath.config';
     ConfigModule.forFeature(refreshJwtConfig),
     ConfigModule.forFeature(googleOauthConfig),
     ConfigModule.forFeature(facebookOathConfig),
+    ConfigModule.forFeature(githubOathConfig),
   ],
   controllers: [AuthController],
   providers: [
@@ -37,6 +40,7 @@ import facebookOathConfig from '../common/config/facebook.oath.config';
     RefreshJwtStrategy,
     GoogleStrategy,
     FacebookStrategyService,
+    GithubStrategy,
     // {
     //   provide: APP_GUARD,
     //   useClass: JwtAuthGuard, //@UseGuards(JwtAuthGuard) applied on all API endppints
