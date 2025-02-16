@@ -10,16 +10,17 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { AuthGuard } from '@nestjs/passport';
 import { Public } from '../common/decorators/public.decorator';
 import { LocalAuthGuard } from '../common/guards/local-auth/local-auth.guard';
 import { RefreshAuthGuard } from '../common/guards/refresh-auth/refresh-auth.guard';
 import { JwtAuthGuard } from '../common/guards/jwt-auth/jwt-auth.guard';
 import { GoogleAuthGuard } from '../common/guards/google-auth/google-auth.guard';
+import { FacebookAuthGuard } from '../common/guards/facebook-auth/facebook.auth.guard';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
+
   @Public()
   @HttpCode(HttpStatus.OK)
   @UseGuards(LocalAuthGuard)
@@ -49,6 +50,21 @@ export class AuthController {
   @UseGuards(GoogleAuthGuard)
   @Get('google/callback')
   async googleCallback(@Req() req, @Res() res) {
+    const response = await this.authService.login(req.user.id);
+    res.redirect(
+      `https://internet-magazin-mu.vercel.app/login?token=${response.accessToken}`,
+    );
+  }
+
+  @UseGuards(FacebookAuthGuard)
+  @Get('facebook/login')
+  facebookLogin() {
+    return { message: 'Redirecting to Facebook...' };
+  }
+
+  @UseGuards(FacebookAuthGuard)
+  @Get('facebook/callback')
+  async facebookCallback(@Req() req, @Res() res) {
     const response = await this.authService.login(req.user.id);
     res.redirect(
       `https://internet-magazin-mu.vercel.app/login?token=${response.accessToken}`,

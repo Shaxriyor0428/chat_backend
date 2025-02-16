@@ -97,4 +97,10 @@ export class AuthService {
     if (user) return user;
     return await this.userService.create(googleUser);
   }
+
+  async validateFacebookUser(faceBookUser: CreateUserDto) {
+    const user = await this.userService.findByEmail(faceBookUser.email);
+    if (user) return user;
+    return await this.userService.create(faceBookUser);
+  }
 }
