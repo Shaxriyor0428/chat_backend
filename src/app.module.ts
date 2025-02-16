@@ -9,6 +9,7 @@ import { UserModule } from './user/user.module';
 import dbConfig from './config/db.config';
 import dbConfigProduction from './config/db.config.production';
 import { AuthModule } from './auth/auth.module';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -35,7 +36,7 @@ import { AuthModule } from './auth/auth.module';
     BotModule,
     ClientModule,
   ],
-  controllers: [],
+  controllers: [AppController],
   providers: [],
 })
 export class AppModule {}
