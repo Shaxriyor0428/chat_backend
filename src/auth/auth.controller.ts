@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Get,
   HttpCode,
@@ -17,10 +18,22 @@ import { JwtAuthGuard } from '../common/guards/jwt-auth/jwt-auth.guard';
 import { GoogleAuthGuard } from '../common/guards/google-auth/google-auth.guard';
 import { FacebookAuthGuard } from '../common/guards/facebook-auth/facebook.auth.guard';
 import { GithubAuthGuard } from '../common/guards/github/github.guard';
+import { CreateUserDto } from '../user/dto/create-user.dto';
+import { SignInDto } from './dto/sign-in.dto';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
+
+  @Post('signup')
+  async signUp(@Body() createUserDto: CreateUserDto) {
+    return await this.authService.signUp(createUserDto);
+  }
+
+  @Post('login-user')
+  async signIn(@Body() signInDto: SignInDto) {
+    return await this.authService.signIn({ ...signInDto });
+  }
 
   @Public()
   @HttpCode(HttpStatus.OK)

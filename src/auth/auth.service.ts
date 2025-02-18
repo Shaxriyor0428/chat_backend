@@ -8,6 +8,7 @@ import { ConfigType } from '@nestjs/config';
 import * as argon2 from 'argon2';
 import { CurrentUser } from '../common/types/current-user';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
+import { SignInDto } from './dto/sign-in.dto';
 
 @Injectable()
 export class AuthService {
@@ -18,12 +19,13 @@ export class AuthService {
     private refreshTokenConfig: ConfigType<typeof refreshJwtConfig>,
   ) {}
 
-  async isValidateUser(email: string, password: string) {
+  async signIn(signInDto: SignInDto) {
+    const { email, password } = signInDto;
     const user = await this.userService.findByEmail(email);
-    if (!user) throw new UnauthorizedException('User not found!');
+    if (!user) throw new UnauthorizedException('Email or password incorrect!');
     const isPasswordMatch = await compare(password, user.password);
     if (!isPasswordMatch)
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException('Email or password incorrect!');
 
     return { id: user.id };
   }
@@ -92,7 +94,7 @@ export class AuthService {
     return currentUser;
   }
 
-  async validateUser(createUser: CreateUserDto) {
+  async signUp(createUser: CreateUserDto) {
     const user = await this.userService.findByEmail(createUser.email);
     if (user) return user;
     return await this.userService.create(createUser);
